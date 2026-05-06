@@ -455,12 +455,15 @@ elif st.session_state.campo_fase == "fim":
     col1, col2 = st.columns(2)
     with col1:
         if st.button("💾 Salvar sessão", use_container_width=True, type="primary"):
-            salvar_sessao({
+            ok, msg = salvar_sessao({
                 "usuario":  st.session_state.campo_usuario,
                 "via_nome": st.session_state.campo_via_nome,
                 "trechos":  trechos,
             })
-            st.success("✅ Salvo no CSV!")
+            if ok:
+                st.success(f"✅ {msg}")
+            else:
+                st.error(f"❌ {msg}")
     with col2:
         if st.button("🔄 Nova sessão", use_container_width=True):
             reset_estado()
