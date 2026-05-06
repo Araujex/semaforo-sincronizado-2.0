@@ -70,7 +70,7 @@ VIAS = {
         "nome":          "Rua XV de Novembro",
         "icone":         "🛣️",
         "vel_livre_kmh": 40,
-        "tempos_campo":  [30, 30, 30, 30],  # placeholders — atualizar após medição
+        "tempos_campo":  [16, 16, 27, 16],  # placeholders — atualizar após medição
         "semaforos": [
             {"nome": "Semáforo Dona Mistura",  "lat": -23.000309, "lon": -47.504159,
              "n_lombadas": 0, "vel_lombada_kmh": 30, "n_pontos_atrito": 0,

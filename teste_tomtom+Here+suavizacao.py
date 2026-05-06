@@ -126,7 +126,7 @@ def salvar_mysql(resultados, via):
             if r is None:
                 continue
             cursor.execute(sql, (
-                datetime.now(), "teste", "",
+                datetime.now(), "modelo", "",
                 via["nome"], r["trecho"],
                 round(r["dist"],     1),
                 round(r["v_api"],    1),
