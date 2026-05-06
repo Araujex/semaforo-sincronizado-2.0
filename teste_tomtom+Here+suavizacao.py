@@ -34,7 +34,7 @@ VIAS = {
     "1": {
         "nome": "Av. Pio XII — Descendo sentido Rafard",
         "vel_livre_kmh": 50,
-        "tempos_campo": [30, 60],
+        "tempos_campo": [40, 60],
         "semaforos": [
             {"nome": "Semáforo Capifer", "lat": -22.996986, "lon": -47.513359,
              "n_lombadas": 2, "vel_lombada_kmh": 25, "n_pontos_atrito": 1, "nivel_atrito": "M", "dist_influencia_m": 100},
