@@ -2,7 +2,9 @@
 # storage.py — Salva dados da sessão de campo no MySQL (Railway)
 # ============================================================
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+BRASILIA = timezone(timedelta(hours=-3))
 import mysql.connector
 from mysql.connector import Error
 from modules.config import get_secret
@@ -41,7 +43,7 @@ def salvar_sessao(sessao: dict):
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
-        timestamp = datetime.now()
+        timestamp = datetime.now(BRASILIA)
 
         for t in sessao.get("trechos", []):
             cursor.execute(sql, (
