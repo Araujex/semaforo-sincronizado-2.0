@@ -4,17 +4,24 @@
 # ============================================================
 
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+# Carrega .env apenas se existir (desenvolvimento local)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 def _get(chave):
     """Tenta st.secrets primeiro (cloud), depois os.getenv (local)."""
     try:
         import streamlit as st
-        return st.secrets[chave]
+        val = st.secrets.get(chave)  # .get() evita KeyError se a chave não existir
+        if val is not None:
+            return val
     except Exception:
-        return os.getenv(chave)
+        pass
+    return os.getenv(chave)
 
 HERE_API_KEY   = _get("HERE_API_KEY")
 TOMTOM_API_KEY = _get("TOMTOM_API_KEY")
