@@ -259,10 +259,10 @@ def conectar_mysql():
         database         = os.getenv("MYSQL_DATABASE"),
         user             = os.getenv("MYSQL_USER"),
         password         = os.getenv("MYSQL_PASSWORD"),
-        ssl_disabled     = True,
-        connection_timeout = 30,       # espera até 30s para conectar
-        autocommit       = False,
-        use_pure         = True,       # força driver Python puro (mais estável)
+        connection_timeout  = 30,
+        autocommit          = False,
+        ssl_verify_cert     = False,
+        ssl_verify_identity = False,
     )
 
 

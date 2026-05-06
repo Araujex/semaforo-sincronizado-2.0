@@ -15,10 +15,10 @@ def _conectar():
         database           = get_secret("MYSQL_DATABASE"),
         user               = get_secret("MYSQL_USER"),
         password           = get_secret("MYSQL_PASSWORD"),
-        ssl_disabled       = True,
-        connection_timeout = 30,
-        autocommit         = False,
-        use_pure           = True,
+        connection_timeout  = 30,
+        autocommit          = False,
+        ssl_verify_cert     = False,
+        ssl_verify_identity = False,
     )
 
 
