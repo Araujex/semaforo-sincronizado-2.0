@@ -6,14 +6,18 @@ import streamlit as st
 import time
 import uuid
 
-from modules.vias import VIAS, USUARIOS
+from modules.vias import VIAS
 from modules.api import obter_distancia, consultar_tomtom, calcular_heading
 from modules.calculos import (
     calcular_trecho_hcm, calcular_trecho_api,
     calcular_offset_final, estimar_fila,
 )
 from modules.storage import salvar_sessao
-from modules.config import FILA_MINIMA
+from modules.config import FILA_MINIMA, get_secret
+from modules.usuarios import (
+    carregar_usuarios, adicionar_usuario,
+    renomear_usuario, remover_usuario,
+)
 
 st.set_page_config(
     page_title="Modo Campo — Semáforo",
@@ -101,7 +105,35 @@ if st.session_state.campo_fase == "selecao":
     st.markdown("Cronometragem real entre semáforos para calibrar o modelo.")
     st.divider()
 
-    usuario = st.selectbox("👤 Quem está testando?", USUARIOS)
+    # ── Usuários ──
+    lista_usuarios = carregar_usuarios()
+    OPCAO_NOVO     = "➕ Adicionar novo usuário..."
+    opcoes_usuario = lista_usuarios + [OPCAO_NOVO]
+
+    sel_usuario = st.selectbox("👤 Quem está testando?", opcoes_usuario)
+
+    usuario = None
+    if sel_usuario == OPCAO_NOVO:
+        novo_nome = st.text_input("Nome do novo usuário:", placeholder="Ex: Pedro")
+        col_add, _ = st.columns([1, 2])
+        with col_add:
+            if st.button("✅ Adicionar", use_container_width=True):
+                if novo_nome.strip():
+                    ok, msg = adicionar_usuario(novo_nome.strip())
+                    if ok:
+                        st.success(msg)
+                        st.rerun()
+                    else:
+                        st.error(msg)
+                else:
+                    st.warning("Digite um nome.")
+        if novo_nome.strip():
+            usuario = novo_nome.strip()
+        else:
+            st.info("Digite um nome para continuar.")
+    else:
+        usuario = sel_usuario
+
     via_key = st.selectbox(
         "🛣️ Qual via?",
         options=list(VIAS.keys()),
@@ -124,8 +156,63 @@ if st.session_state.campo_fase == "selecao":
     else:
         st.warning("Selecione um semáforo antes do último para ter ao menos 1 trecho.")
 
+    # ── Painel ADM ──
+    with st.expander("⚙️ Administrador"):
+        senha_input = st.text_input("Senha:", type="password", key="adm_senha_input")
+        SENHA_ADM   = get_secret("ADMIN_SENHA") or "admin"
+
+        if senha_input and senha_input == SENHA_ADM:
+            st.success("✅ Acesso liberado")
+            st.markdown("---")
+
+            # Adicionar usuário
+            st.markdown("**Adicionar usuário**")
+            col_an, col_ab = st.columns([3, 1])
+            with col_an:
+                adm_novo = st.text_input("Nome:", key="adm_add_nome", placeholder="Nome")
+            with col_ab:
+                st.markdown("<div style='margin-top:28px'>", unsafe_allow_html=True)
+                if st.button("Adicionar", key="adm_btn_add", use_container_width=True):
+                    ok, msg = adicionar_usuario(adm_novo)
+                    st.success(msg) if ok else st.error(msg)
+                    if ok:
+                        st.rerun()
+                st.markdown("</div>", unsafe_allow_html=True)
+
+            st.markdown("---")
+
+            # Renomear usuário
+            st.markdown("**Renomear usuário**")
+            col_ru, col_rn = st.columns(2)
+            with col_ru:
+                adm_renomear_de = st.selectbox("Usuário:", lista_usuarios, key="adm_ren_de")
+            with col_rn:
+                adm_renomear_para = st.text_input("Novo nome:", key="adm_ren_para")
+            if st.button("Renomear", key="adm_btn_ren", use_container_width=True):
+                ok, msg = renomear_usuario(adm_renomear_de, adm_renomear_para)
+                st.success(msg) if ok else st.error(msg)
+                if ok:
+                    st.rerun()
+
+            st.markdown("---")
+
+            # Remover usuário
+            st.markdown("**Remover usuário**")
+            adm_remover = st.selectbox("Usuário:", lista_usuarios, key="adm_rem_sel")
+            if st.button(f"🗑️ Remover '{adm_remover}'", key="adm_btn_rem",
+                         use_container_width=True, type="primary"):
+                ok, msg = remover_usuario(adm_remover)
+                st.success(msg) if ok else st.error(msg)
+                if ok:
+                    st.rerun()
+
+        elif senha_input:
+            st.error("Senha incorreta.")
+
+    st.divider()
+
     if n_trechos > 0:
-        if st.button("▶ Preparar sessão", use_container_width=True, type="primary"):
+        if usuario and st.button("▶ Preparar sessão", use_container_width=True, type="primary"):
             reset_estado()
             st.session_state.campo_usuario         = usuario
             st.session_state.campo_via_key         = via_key
