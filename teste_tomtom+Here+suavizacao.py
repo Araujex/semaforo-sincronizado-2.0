@@ -34,11 +34,13 @@ VIAS = {
     "1": {
         "nome": "Av. Pio XII — Descendo sentido Rafard",
         "vel_livre_kmh": 50,
-        "tempos_campo": [60],
+        "tempos_campo": [30, 60],
         "semaforos": [
-            {"nome": "Semáforo 1", "lat": -22.999687, "lon": -47.516329,
+            {"nome": "Semáforo Capifer", "lat": -22.996986, "lon": -47.513359,
              "n_lombadas": 2, "vel_lombada_kmh": 25, "n_pontos_atrito": 1, "nivel_atrito": "M", "dist_influencia_m": 100},
-            {"nome": "Semáforo 2", "lat": -23.003839, "lon": -47.520074,
+            {"nome": "Semáforo Sky Fit", "lat": -22.999687, "lon": -47.516329,
+             "n_lombadas": 2, "vel_lombada_kmh": 25, "n_pontos_atrito": 1, "nivel_atrito": "M", "dist_influencia_m": 100},
+            {"nome": "Semáforo Smash Agro", "lat": -23.003839, "lon": -47.520074,
              "n_lombadas": 0, "vel_lombada_kmh": 30, "n_pontos_atrito": 0, "nivel_atrito": "L", "dist_influencia_m": 100},
         ],
     },
