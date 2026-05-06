@@ -1,6 +1,6 @@
 # ============================================================
 # config.py — Configurações globais
-# Lê credenciais do st.secrets (Streamlit Cloud) ou do .env (local)
+# Credenciais lidas em tempo de execução via get_secret()
 # ============================================================
 
 import os
@@ -12,25 +12,24 @@ try:
 except ImportError:
     pass
 
-def _get(chave):
-    """Tenta st.secrets primeiro (cloud), depois os.getenv (local)."""
+
+def get_secret(chave):
+    """
+    Lê credencial em tempo de execução.
+    Tenta st.secrets (Streamlit Cloud) primeiro, depois os.getenv (local).
+    Deve ser chamada dentro de funções, nunca no nível do módulo.
+    """
     try:
         import streamlit as st
-        val = st.secrets.get(chave)  # .get() evita KeyError se a chave não existir
+        val = st.secrets.get(chave)
         if val is not None:
             return val
     except Exception:
         pass
     return os.getenv(chave)
 
-HERE_API_KEY   = _get("HERE_API_KEY")
-TOMTOM_API_KEY = _get("TOMTOM_API_KEY")
 
-MYSQL_HOST     = _get("MYSQL_HOST")
-MYSQL_PORT     = _get("MYSQL_PORT")
-MYSQL_DATABASE = _get("MYSQL_DATABASE")
-MYSQL_USER     = _get("MYSQL_USER")
-MYSQL_PASSWORD = _get("MYSQL_PASSWORD")
+# ── Constantes físicas (seguras no nível do módulo) ──────────────
 
 ACELERACAO_MS2    = 3.0
 DESACELERACAO_MS2 = 2.5

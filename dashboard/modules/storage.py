@@ -5,18 +5,16 @@
 from datetime import datetime
 import mysql.connector
 from mysql.connector import Error
-from modules.config import (
-    MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD
-)
+from modules.config import get_secret
 
 
 def _conectar():
     return mysql.connector.connect(
-        host               = MYSQL_HOST,
-        port               = int(MYSQL_PORT),
-        database           = MYSQL_DATABASE,
-        user               = MYSQL_USER,
-        password           = MYSQL_PASSWORD,
+        host               = get_secret("MYSQL_HOST"),
+        port               = int(get_secret("MYSQL_PORT")),
+        database           = get_secret("MYSQL_DATABASE"),
+        user               = get_secret("MYSQL_USER"),
+        password           = get_secret("MYSQL_PASSWORD"),
         ssl_disabled       = True,
         connection_timeout = 30,
         autocommit         = False,

@@ -4,7 +4,7 @@
 
 import requests
 import math
-from modules.config import HERE_API_KEY, TOMTOM_API_KEY, CONFIDENCE_MINIMA
+from modules.config import get_secret, CONFIDENCE_MINIMA
 
 
 def haversine(lat1, lon1, lat2, lon2):
@@ -17,6 +17,7 @@ def haversine(lat1, lon1, lat2, lon2):
 
 def obter_distancia(lat1, lon1, lat2, lon2):
     """HERE com fallback Haversine se rota suspeita (>1.5× linha reta)."""
+    HERE_API_KEY = get_secret("HERE_API_KEY")
     linha_reta = haversine(lat1, lon1, lat2, lon2)
     url = "https://router.hereapi.com/v8/routes"
     params = {"transportMode": "car", "origin": f"{lat1},{lon1}",
@@ -42,6 +43,7 @@ def calcular_heading(lat1, lon1, lat2, lon2):
 
 def consultar_tomtom(lat, lon, heading=None):
     """Retorna (currentSpeed, freeFlowSpeed, confidence) ou None."""
+    TOMTOM_API_KEY = get_secret("TOMTOM_API_KEY")
     url = (f"https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json"
            f"?key={TOMTOM_API_KEY}&point={lat},{lon}&unit=KMPH")
     if heading is not None:
