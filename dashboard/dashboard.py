@@ -1,5 +1,5 @@
 # ============================================================
-# dashboard.py — Página de entrada
+# dashboard.py — Ponto de entrada e navegação
 # ============================================================
 
 import streamlit as st
@@ -10,6 +10,8 @@ st.set_page_config(
     layout="centered",
 )
 
-st.markdown("## 🚦 Semáforo Sincronizado — Capivari-SP")
-st.divider()
-st.page_link("pages/2_Campo.py", label="🏁 Modo Campo", icon="🏁")
+pg = st.navigation([
+    st.Page("pages/rua.py",            title="Rua",            icon="🏁"),
+    st.Page("pages/administrador.py",  title="Administrador",  icon="⚙️"),
+])
+pg.run()
