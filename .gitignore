@@ -1,0 +1,28 @@
+# Credenciais e variáveis de ambiente
+.env
+.streamlit/secrets.toml
+
+# Dados coletados (persistidos no banco de dados)
+dados_offset.csv
+dados_offset_virgula_errada.csv
+
+# Arquivos descartados
+teste_tomtom+Here.py
+Script Python.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Ambientes virtuais
+venv/
+.venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
