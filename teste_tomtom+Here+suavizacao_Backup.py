@@ -22,8 +22,14 @@ from mysql.connector import Error
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "dashboard"))
 
 from modules.vias import VIAS
-from modules.calculos import calcular_trecho_hcm, calcular_trecho_api, calcular_offset_final
-from modules.config import CONFIDENCE_MINIMA, EMA_ALPHA, EMA_DELTA_MAX, FILA_MINIMA, PHF_DEFAULT as PHF
+from modules.calculos import (
+    calcular_trecho_hcm, calcular_trecho_api,
+    calcular_offset_final, estimar_fila,
+)
+from modules.config import (
+    CONFIDENCE_MINIMA, EMA_ALPHA, EMA_DELTA_MAX,
+    FILA_MINIMA, PHF_DEFAULT as PHF,
+)
 
 # =========================
 # CREDENCIAIS (.env)
@@ -134,7 +140,7 @@ def salvar_mysql(resultados, via):
                 round(r["t_api"],    1) if r["t_api"]    else None,
                 round(r["t_campo"],  1) if r["t_campo"]  else None,
                 round(r["t_offset"], 1) if r["t_offset"] else None,
-                None,
+                None,  # t_real preenchido depois em campo
             ))
         conn.commit()
         print(f"  ✔ {cursor.rowcount} registros salvos no MySQL (Railway)")
